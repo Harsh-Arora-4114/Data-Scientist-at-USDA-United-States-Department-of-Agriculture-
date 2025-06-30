@@ -1,16 +1,16 @@
-## Data Scientist at USDA (United States Department of Agriculture)
+## USDA Production Insights
 
-**USDA Production Insights** is a SQL-driven data analysis project built to support agricultural decision-making. It processes multi-year, multi-commodity datasets to track U.S. production trends across states. This tool helps generate insights for internal reports, meetings, and strategic agricultural initiatives.
+**USDA Production Insights** is a structured SQL-based data science project developed to analyze U.S. agricultural commodity production. It evaluates multi-year, multi-state trends across five key commodities. The project is designed to support strategic decision-making using real-world datasets provided through a Coursera capstone.
 
 ---
 
 ### Features
 
-* **State-by-State Analysis**: Generates production summaries for each U.S. state.
-* **Multi-Year Trend Tracking**: Identifies year-over-year changes in output.
-* **Commodity-Wise Insights**: Includes milk, cheese, coffee, honey, and yogurt.
-* **Missing Data Handling**: Ignores disclosure-suppressed values like `(D)` and `(NA)`.
-* **Autograder-Compatible Outputs**: All values are numeric with only decimals (no commas).
+* **State-by-State Production Summary**: Compare output across U.S. states.
+* **Cross-Year Trend Detection**: Identify growth or decline in commodity volumes.
+* **Multi-Commodity Analysis**: Covers cheese, milk, coffee, yogurt, and honey.
+* **Missing Data Handling**: Filters out entries such as `(D)` and `(NA)`.
+* **Numeric-Only Output**: Clean formatting for autograder compatibility (no commas).
 
 ---
 
@@ -21,45 +21,46 @@
 * `coffee_production`
 * `honey_production`
 * `yogurt_production`
-* `state_lookup` (for joining state names and ANSI codes)
+* `state_lookup`
+
+Each dataset contains state-level production figures, reported by year (and month, where applicable).
 
 ---
 
-### Setup
+### Installation
 
-Import all CSVs into your SQL database of choice (e.g., MySQL, PostgreSQL, SQLite).
+1. Clone or download the project files.
+2. Import each `.csv` into a relational database system (PostgreSQL, MySQL, SQLite, etc.).
 
 ```bash
-# Example for PostgreSQL
+# PostgreSQL import example
 CREATE TABLE state_lookup (...);
 COPY state_lookup FROM 'state_lookup.csv' CSV HEADER;
-
-CREATE TABLE cheese_production (...);
-COPY cheese_production FROM 'cheese_production.csv' CSV HEADER;
--- Repeat for other datasets
 ```
+
+3. Repeat for each commodity dataset.
 
 ---
 
 ### Usage
 
-Open your SQL editor and run the queries to:
+Run SQL queries to:
 
-* Analyze total cheese production by state in 2023.
-* Check if Delaware produced any cheese in 2023.
-* Track how coffee production changed over the years.
-* Identify states producing over 100 million units of a commodity.
+* Summarize total cheese production in 2023 for each state.
+* Find whether Delaware produced cheese in 2023.
+* Track how coffee production changed across years.
+* Identify states exceeding 100 million units in annual production.
 
 ---
 
 ### Example Queries
 
-**State-Level Cheese Production (2023):**
+**Total Cheese Production by State (2023)**
 
 ```sql
 SELECT 
   sl.State,
-  SUM(CAST(REPLACE(cp.Value, ',', '') AS FLOAT)) AS total_cheese_production_2023
+  SUM(CAST(REPLACE(cp.Value, ',', '') AS FLOAT)) AS total_cheese_production
 FROM 
   state_lookup sl
 LEFT JOIN 
@@ -71,7 +72,7 @@ GROUP BY
   sl.State;
 ```
 
-**Trend in Coffee Production:**
+**Coffee Production Trend**
 
 ```sql
 SELECT 
@@ -81,39 +82,36 @@ FROM
   coffee_production
 WHERE 
   Value NOT LIKE '(%'
-GROUP BY Year
-ORDER BY Year;
+GROUP BY 
+  Year
+ORDER BY 
+  Year;
 ```
 
 ---
 
 ### Output Format
 
-All output values must be numeric. Examples:
-
-```text
-123456.00
-98423.52
-```
-
+All numeric output must be **decimal numbers only** (e.g., `123456.78`).
 ❌ No commas
-✅ Only numbers and periods
+✅ Only digits and periods
 
 ---
 
 ### Disclaimer
 
-This project is for internal analytical use within the USDA. All data and queries are used for official planning, forecasting, and operational analysis. Unauthorized use or distribution is prohibited.
+This project is part of a **Coursera** Data Science specialization and is intended for **educational purposes only**. The datasets, structure, and evaluation guidelines are provided by Coursera for learning SQL, data analysis, and real-world data wrangling techniques.
+
+Use of this project should comply with Coursera’s academic integrity policies.
 
 ---
 
 ### License
 
-This project is internal USDA work and follows federal data usage policies.
+The data and project material are provided by **Coursera** and are intended for educational use under their platform terms. This project does **not claim ownership of the datasets** and is shared in accordance with Coursera’s educational license and use policy.
 
 ---
 
 ### Author
 
 Developed by **Harsh Arora**
-
